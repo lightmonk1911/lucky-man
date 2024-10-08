@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестер удачи</title>
+    <style>
+        #result {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+        }
+        .green {
+            background-color: green;
+        }
+        .red {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Тестер удачи</h1>
+    <p>Угадайте, каким будет квадрат — зеленым или красным.</p>
+    <button id="guessGreen">Зеленый</button>
+    <button id="guessRed">Красный</button>
+    <button id="resetButton" disabled>Сбросить</button>
+    <p>Количество попыток: <span id="clickCount">0</span></p>
+    <p>Количество угаданных: <span id="correctGuesses">0</span></p>
+    <p>Процент удачи: <span id="luckPercentage">0</span>%</p>
+    <div id="result"></div>
+
+    <script>
+        let clickCount = 0;
+        let correctGuesses = 0;
+
+        const guessGreenButton = document.getElementById('guessGreen');
+        const guessRedButton = document.getElementById('guessRed');
+        const resetButton = document.getElementById('resetButton');
+        const clickCountDisplay = document.getElementById('clickCount');
+        const correctGuessesDisplay = document.getElementById('correctGuesses');
+        const luckPercentageDisplay = document.getElementById('luckPercentage');
+        const resultDisplay = document.getElementById('result');
+
+        function handleGuess(userGuess) {
+            clickCount++;
+            clickCountDisplay.textContent = clickCount;
+
+            // Случайный выбор цвета (50%)
+            const isGreen = Math.random() < 0.5;
+            resultDisplay.style.display = 'block';
+            resultDisplay.className = isGreen ? 'green' : 'red';
+
+            // Проверка, угадал ли пользователь
+            if ((userGuess === 'green' && isGreen) || (userGuess === 'red' && !isGreen)) {
+                correctGuesses++;
+                alert('Вы угадали!');
+            } else {
+                alert('Вы не угадали.');
+            }
+
+            correctGuessesDisplay.textContent = correctGuesses;
+            const luckPercentage = (correctGuesses / clickCount) * 100;
+            luckPercentageDisplay.textContent = luckPercentage.toFixed(2);
+
+            // Активируем кнопку сброса после 10 попыток
+            if (clickCount >= 10) {
+                resetButton.disabled = false;
+            }
+        }
+
+        guessGreenButton.addEventListener('click', () => handleGuess('green'));
+        guessRedButton.addEventListener('click', () => handleGuess('red'));
+
+        resetButton.addEventListener('click', () => {
+            clickCount = 0;
+            correctGuesses = 0;
+            clickCountDisplay.textContent = '0';
+            correctGuessesDisplay.textContent = '0';
+            luckPercentageDisplay.textContent = '0';
+            resultDisplay.style.display = 'none';
+            resetButton.disabled = true;
+        });
+    </script>
+</body>
+</html>
